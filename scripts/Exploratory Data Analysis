@@ -1,0 +1,85 @@
+#World Life Expectancy Data Cleaning Project
+
+#Initial Data View
+SELECT * FROM worldlifeexpectancy LIMIT 1000;
+
+#View what countries have increased their Life Expectancy
+SELECT Country, 
+MIN(Life_expectancy_) AS Min_Life_Exp, 
+MAX(Life_expectancy_) AS Max_Life_Exp, 
+ROUND(MAX(Life_expectancy_)-MIN(Life_expectancy_),1) AS Life_Increase_15_Years
+FROM worldlifeexpectancy
+GROUP BY Country
+HAVING MIN(Life_expectancy_) <> 0
+AND MAX(Life_expectancy_) <> 0
+ORDER BY Country DESC
+;
+
+#View the Average Life Expectancy by Year
+SELECT Year, 
+ROUND(AVG(Life_expectancy_),2) AS Avg_Life_Expectancy
+FROM worldlifeexpectancy
+GROUP BY Year
+HAVING MIN(Life_expectancy_) <> 0
+AND MAX(Life_expectancy_) <> 0
+ORDER By Year
+;
+
+#Is there a correlation between GDP and Life Expectancy
+SELECT Country, 
+ROUND(AVG(Life_expectancy_),2) as Avg_Life_Exp, 
+ROUND(AVG(GDP),2) AS Avg_GDP
+FROM worldlifeexpectancy
+GROUP BY Country
+HAVING Avg_Life_Exp > 0
+AND Avg_GDP > 0
+ORDER BY Avg_GDP DESC
+;
+
+#Analyze the relationship between GDP and life expectancy across different countries
+SELECT
+SUM(CASE WHEN GDP >= 1500 THEN 1 ELSE 0 END) AS High_GDP_Count,
+ROUND(AVG(CASE WHEN GDP >= 1500 THEN Life_expectancy_ ELSE null END),2) AS High_GDP_Life_Exp,
+SUM(CASE WHEN GDP < 1500 THEN 1 ELSE 0 END) AS Low_GDP_Count,
+ROUND(AVG(CASE WHEN GDP < 1500 THEN Life_expectancy_ ELSE null END),2) AS Low_GDP_Life_Exp
+FROM worldlifeexpectancy
+;
+
+#Analyze the relationship between Status and life expectancy across different countries
+SELECT
+Status,
+COUNT(DISTINCT Country) as Countries,
+ROUND(AVG(Life_expectancy_),2) AS AVG_Life_Exp
+FROM worldlifeexpectancy
+GROUP BY Status
+;
+
+#Analyze life expectancy and body mass index (BMI) across different countries.
+SELECT Country,
+ROUND(AVG(Life_expectancy_),2) AS Avg_Life_Exp,
+ROUND(AVG(_BMI_),2) AS Avg_BMI
+FROM worldlifeexpectancy
+GROUP BY Country
+HAVING Avg_Life_Exp > 0
+AND Avg_BMI > 0
+ORDER BY Avg_BMI DESC
+;
+
+#Analyze life expectancy and adult mortality data across different countries and years
+SELECT Country,
+Year,
+Life_expectancy_,
+Adult_Mortality,
+SUM(Adult_Mortality) OVER(PARTITION BY Country ORDER BY Year) AS Rolling_Total
+FROM worldlifeexpectancy
+;
+
+#Analyze life expectancy and adult mortality data across different countries with the word 'United' and years
+SELECT Country,
+Year,
+Life_expectancy_,
+Adult_Mortality,
+SUM(Adult_Mortality) OVER(PARTITION BY Country ORDER BY Year) AS Rolling_Total
+FROM worldlifeexpectancy
+WHERE Country LIKE '%United%'
+;
