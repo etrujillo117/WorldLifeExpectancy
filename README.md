@@ -25,16 +25,12 @@ The repository is organized as follows:
 ```
 WorldLifeExpectancy/
 │
-├── data/
-│   └──  raw_data/
-│
 ├── scripts/
 │   └── queries/
 │  
 └──  README.md
 ```
 - `scripts/`: Includes SQL scripts for querying and transforming the data.
-- `results/`: Stores the results of the analysis, including visualizations and reports.
 
 ## Usage
 
@@ -45,6 +41,6 @@ This project is intended to showcase my skills with SQL and is not meant to be i
 For any questions or inquiries, please feel free to contact me:
 
 - Name: Edgar J. Trujillo
-- Email: edgartrujillo117@gmail.com
+- Email: edgartrujillo1994@gmail.com
 
 Thank you for your interest in the World Life Expectancy Project! I hope you find the analysis insightful and valuable.
